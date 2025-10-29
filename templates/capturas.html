@@ -1,0 +1,52 @@
+{% extends "base.html" %}{% block title %}Capturas - ORBET{% endblock %}
+{% block content %}
+<h2>Capturas</h2>
+
+<p>Filtro:
+  <a class="tag"
+     href="/capturas?tipo=all{% if desde %}&desde={{desde}}{% endif %}{% if hasta %}&hasta={{hasta}}{% endif %}">Todos</a>
+  <a class="tag"
+     href="/capturas?tipo=persona{% if desde %}&desde={{desde}}{% endif %}{% if hasta %}&hasta={{hasta}}{% endif %}">Persona</a>
+  <a class="tag"
+     href="/capturas?tipo=vehiculo{% if desde %}&desde={{desde}}{% endif %}{% if hasta %}&hasta={{hasta}}{% endif %}">Vehículo</a>
+  <a class="tag"
+     href="/capturas?tipo=animal{% if desde %}&desde={{desde}}{% endif %}{% if hasta %}&hasta={{hasta}}{% endif %}">Animal</a>
+</p>
+
+<form method="get" action="/capturas" style="margin:10px 0; display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+  <input type="hidden" name="tipo" value="{{ tipo }}">
+  <label>Desde:
+    <input type="date" name="desde" value="{{ desde or '' }}">
+  </label>
+  <label>Hasta:
+    <input type="date" name="hasta" value="{{ hasta or '' }}">
+  </label>
+  <button type="submit">Filtrar</button>
+  <a href="/capturas?tipo={{ tipo }}"><button type="button">Limpiar</button></a>
+</form>
+
+<table>
+  <thead>
+    <tr>
+      <th>Archivo</th>
+      <th>Tipo</th>
+      <th>Tamaño</th>
+      <th>Fecha</th>
+      <th>Ver</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for f in files %}
+    <tr>
+      <td>{{ f.rel }}</td>
+      <td>{{ f.tipo }}</td>
+      <td>{{ (f.size/1024)|round(1) }} KB</td>
+      <td>{{ f.mtime.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+      <td><a href="/capture/{{ f.rel }}" target="_blank">Abrir</a></td>
+    </tr>
+  {% else %}
+    <tr><td colspan="5">No hay archivos.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

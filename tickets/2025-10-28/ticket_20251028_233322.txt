@@ -1,0 +1,12 @@
+TICKET DE REGISTRO - ORBET
+==========================
+ID: 20251028_233322
+FECHA_HORA: 2025-10-28 23:33:22
+IMAGEN: C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_web_panel\capturas\2025-10-28\PERSONA_23-33-22.jpg
+CATEGORÍA: PERSONA
+CLASE_YOLO: person (conf=0.88)
+
+CATEGORÍA (marcar con X):
+[ ] MOVIL   [ ] TRABAJADOR   [ ] VISITA   [ ] CLIENTE
+
+Firma vigilante: _________________________________

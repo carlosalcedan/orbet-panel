@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block title %}Login - ORBET{% endblock %}
+{% block content %}
+<h2>Acceso</h2>
+<form method="post" action="/login" style="max-width:360px">
+<label>Usuario</label><br><input name="username" required style="width:100%"><br><br>
+<label>Contraseña</label><br><input type="password" name="password" required style="width:100%"><br><br>
+<button type="submit">Ingresar</button>
+</form>
+{% if message %}<p style="color:#f39c12">{{ message }}</p>{% endif %}
+{% endblock %}

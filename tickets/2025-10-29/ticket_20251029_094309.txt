@@ -1,0 +1,12 @@
+TICKET DE REGISTRO - ORBET
+==========================
+ID: 20251029_094309
+FECHA_HORA: 2025-10-29 09:43:09
+IMAGEN: C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\capturas\2025-10-29\AUTO_09-43-09.jpg
+CATEGORÍA: AUTO
+CLASE_YOLO: car (conf=0.91)
+
+CATEGORÍA (marcar con X):
+[ ] MOVIL   [ ] TRABAJADOR   [ ] VISITA   [ ] CLIENTE
+
+Firma vigilante: _________________________________

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Horarios de alerta</h2>
+<form class="card" method="post" action="/horarios/new">
+  <div class="row">
+    <label>Nombre</label>
+    <input name="name" placeholder="Noche L–V" required>
+  </div>
+  <div class="row">
+    <label>Días (L..D)</label>
+    <input name="days_mask" placeholder="1111100" maxlength="7" required>
+    <small>7 dígitos: L=1 ... D=1 (ej. L–V=1111100)</small>
+  </div>
+  <div class="row two">
+    <div>
+      <label>Inicio</label>
+      <input type="time" name="start_time" value="21:00" required>
+    </div>
+    <div>
+      <label>Fin</label>
+      <input type="time" name="end_time" value="05:00" required>
+    </div>
+  </div>
+  <label class="chk"><input type="checkbox" name="enabled" checked> Activado</label>
+  <button>Guardar</button>
+</form>
+
+<table class="table">
+  <thead><tr><th>ID</th><th>Nombre</th><th>Días</th><th>Inicio</th><th>Fin</th><th>Estado</th><th>Acciones</th></tr></thead>
+  <tbody>
+    {% for s in schedules %}
+    <tr>
+      <td>{{ s.id }}</td>
+      <td>{{ s.name }}</td>
+      <td>{{ s.days_mask }}</td>
+      <td>{{ s.start_time }}</td>
+      <td>{{ s.end_time }}</td>
+      <td>{{ 'ON' if s.enabled else 'OFF' }}</td>
+      <td>
+        <form method="post" action="/horarios/toggle/{{ s.id }}" style="display:inline"><button>On/Off</button></form>
+        <form method="post" action="/horarios/delete/{{ s.id }}" style="display:inline" onsubmit="return confirm('¿Eliminar?')"><button class="danger">Eliminar</button></form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

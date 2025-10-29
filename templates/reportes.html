@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Reportes</h2>
+<form class="row card" method="get" action="/reportes">
+  <div>
+    <label>Desde</label>
+    <input type="date" name="desde" value="{{ desde }}">
+  </div>
+  <div>
+    <label>Hasta</label>
+    <input type="date" name="hasta" value="{{ hasta }}">
+  </div>
+  <button>Actualizar</button>
+</form>
+
+<div class="grid3">
+  <div class="stat"><div class="k">👤 Personas</div><div class="v">{{ data.totals.PERSONA }}</div></div>
+  <div class="stat"><div class="k">🐾 Animales</div><div class="v">{{ data.totals.ANIMAL }}</div></div>
+  <div class="stat"><div class="k">🚗 Vehículos</div><div class="v">{{ data.totals.AUTO }}</div></div>
+</div>
+<div class="stat total">TOTAL: {{ data.totals.TOTAL }}</div>
+
+<h3>Por hora</h3>
+<table class="table">
+  <thead><tr><th>Hora</th><th>Persona</th><th>Animal</th><th>Vehículo</th></tr></thead>
+  <tbody>
+    {% for r in data.by_hour %}
+    <tr>
+      <td>{{ r.hour }}</td><td>{{ r.PERSONA }}</td><td>{{ r.ANIMAL }}</td><td>{{ r.AUTO }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

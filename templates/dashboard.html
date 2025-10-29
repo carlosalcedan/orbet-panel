@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Dashboard</h2>
+<div class="grid3">
+  <div class="stat"><div class="k">👤 Personas</div><div class="v">{{ stats.today.PERSONA }}</div></div>
+  <div class="stat"><div class="k">🐾 Animales</div><div class="v">{{ stats.today.ANIMAL }}</div></div>
+  <div class="stat"><div class="k">🚗 Vehículos</div><div class="v">{{ stats.today.AUTO }}</div></div>
+</div>
+<div class="stat total">Hoy total: {{ stats.today.TOTAL }} | Últimos 7 días: {{ stats.week_total }}</div>
+
+<h3>Últimos eventos</h3>
+<div class="events">
+  {% for e in stats.last_events %}
+  <div class="event">
+    <div class="meta">{{ e.timestamp }} | {{ e.category }} | {{ e.raw_class }} ({{ '%.2f'|format(e.confidence) }})</div>
+    {% if e.image_path %}
+      <a href="/file/preview?path={{ e.image_path|urlencode }}" target="_blank">Ver imagen</a>
+    {% endif %}
+    {% if e.ticket_path %}
+      <a href="/file/preview?path={{ e.ticket_path|urlencode }}" target="_blank">Ticket</a>
+    {% endif %}
+  </div>
+  {% else %}
+  <div class="muted">Sin eventos aún.</div>
+  {% endfor %}
+</div>
+{% endblock %}

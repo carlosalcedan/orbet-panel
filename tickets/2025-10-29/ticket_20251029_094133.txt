@@ -1,0 +1,12 @@
+TICKET DE REGISTRO - ORBET
+==========================
+ID: 20251029_094133
+FECHA_HORA: 2025-10-29 09:41:33
+IMAGEN: C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\capturas\2025-10-29\PERSONA_09-41-33.jpg
+CATEGORÍA: PERSONA
+CLASE_YOLO: person (conf=0.92)
+
+CATEGORÍA (marcar con X):
+[ ] MOVIL   [ ] TRABAJADOR   [ ] VISITA   [ ] CLIENTE
+
+Firma vigilante: _________________________________

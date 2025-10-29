@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Archivos (capturas y tickets)</h2>
+<form class="row card" method="get" action="/archivos">
+  <div>
+    <label>Fecha</label>
+    <input type="date" name="fecha" value="{{ fecha }}">
+  </div>
+  <div>
+    <label>Categoría</label>
+    <select name="categoria">
+      <option value="">Todas</option>
+      <option value="PERSONA" {% if categoria=='PERSONA' %}selected{% endif %}>Persona</option>
+      <option value="ANIMAL" {% if categoria=='ANIMAL' %}selected{% endif %}>Animal</option>
+      <option value="AUTO" {% if categoria=='AUTO' %}selected{% endif %}>Vehículo</option>
+    </select>
+  </div>
+  <button>Filtrar</button>
+</form>
+
+<table class="table">
+  <thead><tr><th>Fecha/Hora</th><th>Cat.</th><th>Clase</th><th>Conf.</th><th>Imagen</th><th>Ticket</th></tr></thead>
+  <tbody>
+    {% for e in events %}
+      <tr>
+        <td>{{ e.timestamp }}</td>
+        <td>{{ e.category }}</td>
+        <td>{{ e.raw_class }}</td>
+        <td>{{ '%.2f'|format(e.confidence) }}</td>
+        <td>{% if e.image_path %}<a target="_blank" href="/file/preview?path={{ e.image_path|urlencode }}">Ver</a>{% endif %}</td>
+        <td>{% if e.ticket_path %}<a target="_blank" href="/file/preview?path={{ e.ticket_path|urlencode }}">Abrir</a>{% endif %}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

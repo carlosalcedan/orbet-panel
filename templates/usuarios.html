@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% block title %}Usuarios - ORBET{% endblock %}
+{% block content %}
+<h2>Usuarios (solo admin)</h2>
+<table><thead><tr><th>Usuario</th><th>Rol</th></tr></thead><tbody>
+{% for u in users %}<tr><td>{{ u.username }}</td><td>{{ u.role }}</td></tr>{% endfor %}
+</tbody></table>
+<h3>Crear usuario</h3>
+<form method="post" action="/usuarios" style="max-width:520px">
+  <label>Usuario</label><br><input name="username" required style="width:100%"><br><br>
+  <label>Contraseña</label><br><input name="password" type="password" required style="width:100%"><br><br>
+  <label>Rol</label><br>
+  <select name="role" style="width:100%">
+    <option value="user">user</option>
+    <option value="admin">admin</option>
+  </select><br><br>
+  <button type="submit">Crear</button>
+</form>
+{% if message %}<p style="color:#7fb0ff">{{ message }}</p>{% endif %}
+{% endblock %}

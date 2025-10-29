@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% block title %}Ajustes - ORBET{% endblock %}
+{% block content %}
+<h2>Ajustes (solo admin)</h2>
+<form method="post" action="/ajustes" style="max-width:620px">
+  <h3>Alertas Telegram</h3>
+  <label><input type="checkbox" name="enabled" {% if s.telegram.enabled %}checked{% endif %}> Habilitar alertas</label><br><br>
+  <label>Bot Token</label><br><input name="bot_token" value="{{ s.telegram.bot_token }}" style="width:100%"><br><br>
+  <label>Chat ID</label><br><input name="chat_id" value="{{ s.telegram.chat_id }}" style="width:100%"><br><br>
+  <label>Horario (24h)</label><br>
+  <div style="display:flex;gap:10px">
+    <div><span>Inicio</span><br><input name="start" value="{{ s.telegram.start }}" style="width:120px"></div>
+    <div><span>Fin</span><br><input name="end" value="{{ s.telegram.end }}" style="width:120px"></div>
+  </div><br>
+  <label>Tipos a alertar</label><br>
+  <label><input type="checkbox" name="persona"  {% if s.telegram.types.persona  %}checked{% endif %}> Persona</label>
+  <label><input type="checkbox" name="vehiculo" {% if s.telegram.types.vehiculo %}checked{% endif %}> Vehículo</label>
+  <label><input type="checkbox" name="animal"   {% if s.telegram.types.animal   %}checked{% endif %}> Animal</label><br>
+  <label><input type="checkbox" name="send_image" {% if s.telegram.send_image %}checked{% endif %}> Enviar imagen si hay</label>
+  <hr style="margin:20px 0">
+  <h3>Reportes automáticos</h3>
+  <label><input type="checkbox" name="rep_enabled" {% if s.reports.enabled %}checked{% endif %}> Habilitar reporte diario</label><br><br>
+  <label>Hora (24h, ej. 23:55)</label><br><input name="rep_time" value="{{ s.reports.time }}" style="width:150px"><br><br>
+  <label><input type="checkbox" name="rep_to_tg" {% if s.reports.send_to_telegram %}checked{% endif %}> Enviar a Telegram</label><br><br>
+  <button type="submit">Guardar</button>
+</form>
+{% if message %}<p style="color:#7fb0ff">{{ message }}</p>{% endif %}
+{% endblock %}

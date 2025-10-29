@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Configuración</h2>
+<form class="card" method="post" action="/config/save">
+  <label class="chk">
+    <input type="checkbox" name="telegram_enabled" {% if settings.telegram_enabled=='1' %}checked{% endif %}> Enviar a Telegram
+  </label>
+  <label class="chk">
+    <input type="checkbox" name="telegram_only_persona" {% if settings.telegram_only_persona=='1' %}checked{% endif %}> Solo Persona
+  </label>
+  <div class="row">
+    <label>Ruta DB ORBET (ingresos.db)</label>
+    <input name="orbet_db_path" value="{{ settings.orbet_db_path }}" required>
+  </div>
+  <div class="row">
+    <label>Carpeta capturas</label>
+    <input name="captures_root" value="{{ settings.captures_root }}" required>
+  </div>
+  <div class="row">
+    <label>Carpeta tickets</label>
+    <input name="tickets_root" value="{{ settings.tickets_root }}" required>
+  </div>
+  <div class="row two">
+    <div>
+      <label>Usuario admin</label>
+      <input name="admin_user" value="{{ settings.admin_user }}" required>
+    </div>
+    <div>
+      <label>Contraseña (dejar vacío para no cambiar)</label>
+      <input type="password" name="admin_pass" placeholder="••••••••">
+    </div>
+  </div>
+  <button>Guardar</button>
+</form>
+{% endblock %}

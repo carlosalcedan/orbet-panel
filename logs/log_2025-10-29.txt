@@ -1,0 +1,50 @@
+[PRINT_OK] C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_070623.txt
+[2025-10-29 07:06:23] PERSONA detectada – person (conf=0.93) → PERSONA_07-06-23.jpg
+[PRINT_SKIPPED] rate-limited C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_070627.txt
+[2025-10-29 07:06:27] PERSONA detectada – person (conf=0.92) → PERSONA_07-06-27.jpg
+[PRINT_SKIPPED] rate-limited C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_070632.txt
+[2025-10-29 07:06:32] PERSONA detectada – person (conf=0.85) → PERSONA_07-06-32.jpg
+[PRINT_OK] C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_070636.txt
+[2025-10-29 07:06:36] PERSONA detectada – person (conf=0.93) → PERSONA_07-06-36.jpg
+[PRINT_SKIPPED] rate-limited C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_070641.txt
+[2025-10-29 07:06:41] PERSONA detectada – person (conf=0.93) → PERSONA_07-06-41.jpg
+[PRINT_OK] C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094125.txt
+[2025-10-29 09:41:25] PERSONA detectada – person (conf=0.90) → PERSONA_09-41-25.jpg
+[PRINT_SKIPPED] rate-limited C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094129.txt
+[2025-10-29 09:41:29] PERSONA detectada – person (conf=0.94) → PERSONA_09-41-29.jpg
+[PRINT_SKIPPED] rate-limited C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094133.txt
+[2025-10-29 09:41:33] PERSONA detectada – person (conf=0.92) → PERSONA_09-41-33.jpg
+[PRINT_OK] C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094138.txt
+[2025-10-29 09:41:38] PERSONA detectada – person (conf=0.92) → PERSONA_09-41-38.jpg
+[PRINT_SKIPPED] rate-limited C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094142.txt
+[2025-10-29 09:41:42] PERSONA detectada – person (conf=0.86) → PERSONA_09-41-42.jpg
+[PRINT_OK] C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094149.txt
+[2025-10-29 09:41:49] PERSONA detectada – person (conf=0.79) → PERSONA_09-41-49.jpg
+[PRINT_SKIPPED] rate-limited C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094153.txt
+[2025-10-29 09:41:53] PERSONA detectada – person (conf=0.87) → PERSONA_09-41-53.jpg
+[PRINT_OK] C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094219.txt
+[2025-10-29 09:42:19] PERSONA detectada – person (conf=0.50) → PERSONA_09-42-19.jpg
+[PRINT_SKIPPED] rate-limited C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094223.txt
+[2025-10-29 09:42:23] AUTO detectada – car (conf=0.40) → AUTO_09-42-23.jpg
+[PRINT_OK] C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094239.txt
+[2025-10-29 09:42:39] PERSONA detectada – person (conf=0.40) → PERSONA_09-42-39.jpg
+[PRINT_SKIPPED] rate-limited C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094246.txt
+[2025-10-29 09:42:46] AUTO detectada – car (conf=0.68) → AUTO_09-42-46.jpg
+[PRINT_OK] C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094250.txt
+[2025-10-29 09:42:50] AUTO detectada – car (conf=0.90) → AUTO_09-42-50.jpg
+[PRINT_SKIPPED] rate-limited C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094254.txt
+[2025-10-29 09:42:54] PERSONA detectada – person (conf=0.41) → PERSONA_09-42-54.jpg
+[PRINT_SKIPPED] rate-limited C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094256.txt
+[2025-10-29 09:42:56] AUTO detectada – car (conf=0.94) → AUTO_09-42-56.jpg
+[PRINT_OK] C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094300.txt
+[2025-10-29 09:43:00] PERSONA detectada – person (conf=0.57) → PERSONA_09-43-00.jpg
+[PRINT_SKIPPED] rate-limited C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094304.txt
+[2025-10-29 09:43:04] AUTO detectada – car (conf=0.38) → AUTO_09-43-04.jpg
+[PRINT_SKIPPED] rate-limited C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094306.txt
+[2025-10-29 09:43:06] PERSONA detectada – person (conf=0.72) → PERSONA_09-43-06.jpg
+[PRINT_SKIPPED] rate-limited C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094309.txt
+[2025-10-29 09:43:09] AUTO detectada – car (conf=0.91) → AUTO_09-43-09.jpg
+[PRINT_OK] C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094315.txt
+[2025-10-29 09:43:15] PERSONA detectada – person (conf=0.29) → PERSONA_09-43-15.jpg
+[PRINT_SKIPPED] rate-limited C:\ORBET_WEB\ORBET_WEB_PLATAFORMA\ORBET_PANEL_dark_login (1)\tickets\2025-10-29\ticket_20251029_094319.txt
+[2025-10-29 09:43:19] PERSONA detectada – person (conf=0.93) → PERSONA_09-43-19.jpg

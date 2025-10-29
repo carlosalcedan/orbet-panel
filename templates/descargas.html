@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block title %}Descargas - ORBET{% endblock %}
+{% block content %}
+<h2>Descarga ZIP por fecha</h2>
+<form method="post" action="/descargas" style="max-width:520px">
+  <label>Fecha (carpeta)</label><br><input type="date" name="fecha" required style="width:100%"><br><br>
+  <label>Origen</label><br>
+  <select name="origen" style="width:100%">
+    <option value="capturas">Capturas</option>
+    <option value="tickets">Tickets</option>
+  </select><br><br>
+  <button type="submit">Crear ZIP</button>
+</form>
+{% if message %}<p style="color:#f39c12">{{ message }}</p>{% endif %}
+{% endblock %}

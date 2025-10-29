@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}ORBET{% endblock %}</title>
+<style>
+body{background:#0b0f14;color:#eaeef3;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial;margin:0}
+header,footer{padding:14px 18px;background:#0f1621;border-bottom:1px solid #1d2836}
+.container{max-width:1100px;margin:0 auto;padding:18px}
+a{color:#7fb0ff;text-decoration:none}.nav a{margin-right:12px}
+table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #1d2836}
+.tag{display:inline-block;padding:2px 8px;border-radius:12px;background:#172233;border:1px solid #264365;margin-left:6px;font-size:12px}
+.pill{padding:2px 8px;border-radius:10px;background:#1a2534;font-size:12px}
+input,select{background:#0e141b;color:#eaeef3;border:1px solid #223044;border-radius:8px;padding:8px}
+button{padding:10px 16px;border:0;border-radius:10px;background:#2e7dff;color:#fff;font-weight:600;cursor:pointer}
+</style></head><body>
+<header><div class="container nav"><strong>ORBET</strong>
+<span style="margin-left:16px">
+  <a href="/panel">Panel</a>
+  <a href="/capturas">Capturas</a>
+  <a href="/tickets">Tickets</a>
+  <a href="/reporte">Reporte</a>
+  <a href="/descargas">Descargas</a>
+  <a href="/ajustes">Ajustes</a>
+  <a href="/usuarios">Usuarios</a>
+</span>
+<span style="float:right"><a href="/logout">Salir</a></span></div></header>
+<div class="container">{% block content %}{% endblock %}</div>
+<footer style="border-top:1px solid #1d2836"><div class="container">© {{ current_year }} ORBET</div></footer>
+</body></html>

@@ -1,0 +1,20 @@
+{
+  "telegram": {
+    "enabled": false,
+    "bot_token": "",
+    "chat_id": "",
+    "start": "21:00",
+    "end": "05:00",
+    "types": {
+      "persona": true,
+      "vehiculo": true,
+      "animal": false
+    },
+    "send_image": true
+  },
+  "reports": {
+    "enabled": true,
+    "time": "23:55",
+    "send_to_telegram": true
+  }
+}

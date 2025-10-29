@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block title %}Reporte - ORBET{% endblock %}
+{% block content %}
+<h2>Reporte de Detecciones</h2>
+<form method="post" action="/reporte" style="max-width:520px">
+  <label>Desde</label><br><input type="date" name="desde" style="width:100%"><br><br>
+  <label>Hasta</label><br><input type="date" name="hasta" style="width:100%"><br><br>
+  <label>Origen</label><br>
+  <select name="origen" style="width:100%">
+    <option value="ambos">Ambos (Capturas + Tickets)</option>
+    <option value="capturas">Solo Capturas</option>
+    <option value="tickets">Solo Tickets</option>
+  </select><br><br>
+  <button type="submit">Generar reporte</button>
+</form>
+{% endblock %}
