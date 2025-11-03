@@ -1,12 +1,12 @@
-# app.py — ORBET PANEL (recursivo + filtros fecha + reportes + usuarios + ajustes)
+# app.py — ORBET PANEL (panel + login + reportes + API en tiempo real)
 from __future__ import annotations
-import os, json, io, csv, zipfile
+import os, json, io, csv, zipfile, secrets
 from pathlib import Path
 from datetime import datetime, date
 from typing import List, Dict, Optional
 
-from fastapi import FastAPI, Request, Form, Depends, HTTPException
-from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
+from fastapi import FastAPI, Request, Form, Depends, HTTPException, UploadFile, File, Query
+from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
@@ -27,8 +27,9 @@ for d in (TEMPLATES_DIR, STATIC_DIR, DB_DIR, CAPTURAS_DIR, TICKETS_DIR):
     d.mkdir(parents=True, exist_ok=True)
 
 # ===================== APP =====================
-app = FastAPI(title="ORBET Panel")
-app.add_middleware(SessionMiddleware, secret_key="CAMBIA-ESTA-CLAVE-SECRETA-ORBET")
+app = FastAPI(title="ORBET Panel", version="1.0.0")
+secret = os.getenv("ORBET_SECRET") or secrets.token_hex(32)
+app.add_middleware(SessionMiddleware, secret_key=secret)
 
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 templates.env.globals.update(current_year=datetime.now().year)
@@ -59,7 +60,6 @@ def _detect_tipo_from_name(name: str) -> str:
     return "desconocido"
 
 def _list_files(folder: Path, exts: tuple = (".jpg",".jpeg",".png",".gif",".webp",".bmp",".pdf",".txt")) -> List[Dict]:
-    """Lista RECURSIVA (lee subcarpetas por día). Devuelve ruta relativa 'rel'."""
     items: List[Dict] = []
     if not folder.exists():
         return items
@@ -67,7 +67,7 @@ def _list_files(folder: Path, exts: tuple = (".jpg",".jpeg",".png",".gif",".webp
         if p.is_file() and p.suffix.lower() in exts:
             items.append({
                 "name": p.name,
-                "rel": p.relative_to(folder).as_posix(),   # ej: '2025-10-29/foto.jpg'
+                "rel": p.relative_to(folder).as_posix(),
                 "path": str(p),
                 "size": p.stat().st_size,
                 "mtime": datetime.fromtimestamp(p.stat().st_mtime),
@@ -75,6 +75,11 @@ def _list_files(folder: Path, exts: tuple = (".jpg",".jpeg",".png",".gif",".webp
             })
     items.sort(key=lambda x: x["mtime"], reverse=True)
     return items
+
+def _today_dir(base: Path) -> Path:
+    d = base / datetime.now().strftime("%Y-%m-%d")
+    d.mkdir(parents=True, exist_ok=True)
+    return d
 
 # ===================== USUARIOS =====================
 def _load_users() -> List[Dict]:
@@ -129,7 +134,7 @@ def _settings_default():
         },
         "reports": {
             "enabled": True,
-            "time": "23:55",           # HH:MM 24h
+            "time": "23:55",
             "send_to_telegram": True
         }
     }
@@ -162,13 +167,28 @@ def _load_settings():
 def _save_settings(s: dict):
     SETTINGS_FILE.write_text(json.dumps(s, indent=2, ensure_ascii=False), encoding="utf-8")
 
-# ===================== AUTH / NAVEGACIÓN =====================
-@app.get("/", response_class=HTMLResponse)
-def root(request: Request):
-    if request.session.get("user"):
-        return RedirectResponse(url="/panel")
-    return RedirectResponse(url="/login")
+# ===================== SALUD / HOME =====================
+@app.get("/healthz")
+def healthz():
+    return {"ok": True, "time": datetime.utcnow().isoformat() + "Z"}
 
+@app.get("/api/ping")
+def api_ping():
+    return {"pong": True, "ts": datetime.utcnow().isoformat() + "Z"}
+
+@app.get("/", response_class=HTMLResponse)
+def home(_: Request):
+    return """
+    <html><head><title>ORBET PANEL</title></head>
+    <body style="background:#0b0f14;color:#eaeef3;font-family:system-ui;display:flex;align-items:center;justify-content:center;height:100vh">
+      <div style="text-align:center">
+        <h1>✅ ORBET Panel activo</h1>
+        <p><a href="/login" style="color:#7fb0ff">Ingresar</a> · <a href="/docs" style="color:#7fb0ff">API Docs</a> · <a href="/panel" style="color:#7fb0ff">Panel</a></p>
+      </div>
+    </body></html>
+    """
+
+# ===================== AUTH / NAVEGACIÓN =====================
 @app.get("/login", response_class=HTMLResponse)
 def login_page(request: Request):
     return templates.TemplateResponse("login.html", {"request": request, "message": None})
@@ -204,55 +224,31 @@ def panel(request: Request, _: bool = Depends(auth_required)):
 
 # ===================== CAPTURAS / TICKETS (filtros tipo + fecha) =====================
 @app.get("/capturas", response_class=HTMLResponse)
-def capturas_view(
-    request: Request,
-    tipo: str = "all",
-    desde: str | None = None,
-    hasta: str | None = None,
-    _: bool = Depends(auth_required),
-):
+def capturas_view(request: Request, tipo: str = "all", desde: str | None = None, hasta: str | None = None, _: bool = Depends(auth_required)):
     files = _list_files(CAPTURAS_DIR, exts=(".jpg",".jpeg",".png",".webp",".bmp"))
-
     if tipo in {"persona","vehiculo","animal"}:
         files = [f for f in files if f["tipo"] == tipo]
-
-    d1 = _parse_date(desde)
-    d2 = _parse_date(hasta)
-    if d1 and not d2:
-        d2 = d1
+    d1 = _parse_date(desde); d2 = _parse_date(hasta) or (d1 if d1 else None)
     if d1 or d2:
         def in_range(xdate: date):
             if d1 and xdate < d1: return False
             if d2 and xdate > d2: return False
             return True
         files = [f for f in files if in_range(f["mtime"].date())]
-
     return templates.TemplateResponse("capturas.html", {"request": request, "files": files, "tipo": tipo, "desde": desde, "hasta": hasta})
 
 @app.get("/tickets", response_class=HTMLResponse)
-def tickets_view(
-    request: Request,
-    tipo: str = "all",
-    desde: str | None = None,
-    hasta: str | None = None,
-    _: bool = Depends(auth_required),
-):
+def tickets_view(request: Request, tipo: str = "all", desde: str | None = None, hasta: str | None = None, _: bool = Depends(auth_required)):
     files = _list_files(TICKETS_DIR, exts=(".jpg",".jpeg",".png",".webp",".bmp",".pdf",".txt"))
-
     if tipo in {"persona","vehiculo","animal"}:
         files = [f for f in files if f["tipo"] == tipo]
-
-    d1 = _parse_date(desde)
-    d2 = _parse_date(hasta)
-    if d1 and not d2:
-        d2 = d1
+    d1 = _parse_date(desde); d2 = _parse_date(hasta) or (d1 if d1 else None)
     if d1 or d2:
         def in_range(xdate: date):
             if d1 and xdate < d1: return False
             if d2 and xdate > d2: return False
             return True
         files = [f for f in files if in_range(f["mtime"].date())]
-
     return templates.TemplateResponse("tickets.html", {"request": request, "files": files, "tipo": tipo, "desde": desde, "hasta": hasta})
 
 # ===================== SERVIR ARCHIVOS (subcarpetas) =====================
@@ -270,12 +266,45 @@ def get_ticket(relpath: str, _: bool = Depends(auth_required)):
         raise HTTPException(status_code=404, detail="Ticket no encontrado")
     return FileResponse(str(path))
 
+# ===================== API en tiempo real (garita → nube) =====================
+def _check_token(token: str):
+    expected = os.getenv("ORBET_API_TOKEN", "")
+    if not expected or token != expected:
+        raise HTTPException(status_code=401, detail="Token inválido")
+
+def _save_upload(base_dir: Path, imagen: UploadFile, metadata: Optional[str]) -> Dict:
+    day = _today_dir(base_dir)
+    # nombre seguro
+    stamp = datetime.now().strftime("%H%M%S")
+    pure = Path(imagen.filename or f"file_{stamp}.bin").name
+    out = day / f"{stamp}_{pure}"
+    with open(out, "wb") as f:
+        f.write(imagen.file.read())
+    # guardar metadata opcional
+    if metadata:
+        try:
+            md = json.loads(metadata)
+        except Exception:
+            md = {"raw": metadata}
+        (out.with_suffix(out.suffix + ".json")).write_text(json.dumps(md, ensure_ascii=False, indent=2), encoding="utf-8")
+    return {"saved": out.relative_to(base_dir).as_posix()}
+
+@app.post("/api/capturas")
+def api_capturas(token: str = Query(...), imagen: UploadFile = File(...), metadata: str | None = Form(None)):
+    _check_token(token)
+    info = _save_upload(CAPTURAS_DIR, imagen, metadata)
+    return {"ok": True, "type": "captura", **info}
+
+@app.post("/api/tickets")
+def api_tickets(token: str = Query(...), imagen: UploadFile = File(...), metadata: str | None = Form(None)):
+    _check_token(token)
+    info = _save_upload(TICKETS_DIR, imagen, metadata)
+    return {"ok": True, "type": "ticket", **info}
+
 # ===================== REPORTES =====================
 def _recolectar_rows(desde: Optional[str], hasta: Optional[str], origen: str) -> List[Dict]:
     d1 = _parse_date(desde)
-    d2 = _parse_date(hasta)
-    if d1 and not d2:
-        d2 = d1
+    d2 = _parse_date(hasta) or (d1 if d1 else None)
 
     rows: List[Dict] = []
     def take(items: List[Dict], fuente: str):
@@ -305,26 +334,18 @@ def _generar_reporte(rows: List[Dict]) -> Path:
     reports_dir = BASE_DIR / "reports"
     reports_dir.mkdir(exist_ok=True)
     stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    # Si existe openpyxl -> XLSX, si no -> CSV
     try:
         from openpyxl import Workbook  # type: ignore
-        wb = Workbook()
-        ws = wb.active
-        ws.title = "detecciones"
+        wb = Workbook(); ws = wb.active; ws.title = "detecciones"
         ws.append(["Fecha", "Hora", "Tipo", "Fuente", "Archivo"])
-        for r in rows:
-            ws.append([r["fecha"], r["hora"], r["tipo"], r["fuente"], r["archivo"]])
+        for r in rows: ws.append([r["fecha"], r["hora"], r["tipo"], r["fuente"], r["archivo"]])
         path = reports_dir / f"reporte_{stamp}.xlsx"
-        wb.save(str(path))
-        return path
+        wb.save(str(path)); return path
     except Exception:
         path = reports_dir / f"reporte_{stamp}.csv"
         with open(path, "w", newline="", encoding="utf-8") as f:
-            writer = csv.writer(f)
-            writer.writerow(["Fecha","Hora","Tipo","Fuente","Archivo"])
-            for r in rows:
-                writer.writerow([r["fecha"], r["hora"], r["tipo"], r["fuente"], r["archivo"]])
+            w = csv.writer(f); w.writerow(["Fecha","Hora","Tipo","Fuente","Archivo"])
+            for r in rows: w.writerow([r["fecha"], r["hora"], r["tipo"], r["fuente"], r["archivo"]])
         return path
 
 @app.get("/reporte", response_class=HTMLResponse)
@@ -332,9 +353,7 @@ def reporte_page(request: Request, _: bool = Depends(auth_required)):
     return templates.TemplateResponse("reporte.html", {"request": request, "message": None})
 
 @app.post("/reporte")
-def generar_reporte(request: Request,
-    desde: str = Form(None), hasta: str = Form(None), origen: str = Form("ambos")
-):
+def generar_reporte(request: Request, desde: str = Form(None), hasta: str = Form(None), origen: str = Form("ambos")):
     rows = _recolectar_rows(desde, hasta, origen)
     used_path = _generar_reporte(rows)
     return FileResponse(str(used_path), filename=used_path.name)
@@ -357,7 +376,6 @@ def descargar_zip(request: Request, carpeta: str = Form("capturas"), dia: str = 
     day_dir = base / dia
     if not day_dir.exists() or not day_dir.is_dir():
         return templates.TemplateResponse("descargas.html", {"request": request, "message": "No existe esa carpeta de día."}, status_code=400)
-
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
         for p in day_dir.rglob("*"):
@@ -415,13 +433,7 @@ def users_page(request: Request, _: bool = Depends(role_required)):
     return templates.TemplateResponse("usuarios.html", {"request": request, "users": _load_users(), "message": None})
 
 @app.post("/usuarios/crear")
-def users_create(
-    request: Request,
-    username: str = Form(...),
-    password: str = Form(...),
-    role: str = Form("user"),
-    _: bool = Depends(role_required)
-):
+def users_create(request: Request, username: str = Form(...), password: str = Form(...), role: str = Form("user"), _: bool = Depends(role_required)):
     users = _load_users()
     if any(u["username"] == username for u in users):
         return templates.TemplateResponse("usuarios.html", {"request": request, "users": users, "message": "Usuario ya existe."}, status_code=400)
@@ -585,38 +597,6 @@ _ensure_min_template("reporte.html", """{% extends "base.html" %}{% block title 
 {% endblock %}
 """)
 
-_ensure_min_template("ajustes.html", """{% extends "base.html" %}{% block title %}Ajustes - ORBET{% endblock %}
-{% block content %}
-<h2>Ajustes</h2>
-{% if message %}<p style="color:#7fdc84">{{ message }}</p>{% endif %}
-<form method="post" action="/ajustes" style="max-width:680px;display:grid;gap:12px">
-<fieldset style="border:1px solid #203044;padding:12px;border-radius:10px">
-<legend>Telegram</legend>
-<label><input type="checkbox" name="tg_enabled" {% if s.telegram.enabled %}checked{% endif %}> Habilitar</label>
-<label>Bot Token: <input name="tg_bot" value="{{ s.telegram.bot_token }}"></label>
-<label>Chat ID: <input name="tg_chat" value="{{ s.telegram.chat_id }}"></label>
-<label>Desde (HH:MM 24h): <input name="tg_start" value="{{ s.telegram.start }}"></label>
-<label>Hasta (HH:MM 24h): <input name="tg_end" value="{{ s.telegram.end }}"></label>
-<label>Tipos:
-  <input type="checkbox" name="tg_persona" {% if s.telegram.types.persona %}checked{% endif %}> Persona
-  <input type="checkbox" name="tg_vehiculo" {% if s.telegram.types.vehiculo %}checked{% endif %}> Vehículo
-  <input type="checkbox" name="tg_animal" {% if s.telegram.types.animal %}checked{% endif %}> Animal
-</label>
-<label><input type="checkbox" name="tg_send_img" {% if s.telegram.send_image %}checked{% endif %}> Enviar imagen</label>
-</fieldset>
-
-<fieldset style="border:1px solid #203044;padding:12px;border-radius:10px">
-<legend>Reportes</legend>
-<label><input type="checkbox" name="rep_enabled" {% if s.reports.enabled %}checked{% endif %}> Habilitar reporte diario</label>
-<label>Hora (HH:MM 24h): <input name="rep_time" value="{{ s.reports.time }}"></label>
-<label><input type="checkbox" name="rep_to_tg" {% if s.reports.send_to_telegram %}checked{% endif %}> Enviar a Telegram</label>
-</fieldset>
-
-<button type="submit">Guardar</button>
-</form>
-{% endblock %}
-""")
-
 _ensure_min_template("usuarios.html", """{% extends "base.html" %}{% block title %}Usuarios - ORBET{% endblock %}
 {% block content %}
 <h2>Usuarios (admin)</h2>
@@ -666,3 +646,4 @@ _ensure_min_template("descargas.html", """{% extends "base.html" %}{% block titl
 {% endblock %}
 """)
 # ===================== FIN app.py =====================
+
